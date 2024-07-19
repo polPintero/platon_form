@@ -21,8 +21,10 @@
         infoTxt="The last 3 digits on the back of your card"
       />
     </div>
-    <label>
-      <input type="checkbox" />
+    <label class="form-app__checkbox">
+      <span class="form-app__checkbox__input">
+        <input type="checkbox" @input="changeHandler" />
+      </span>
       <span
         >Guarantee of fast return of funds
         <a href="https://platon.ua/policy.pdf" target="_blank">(public policy)</a>
@@ -51,6 +53,9 @@ export default {
     monthValidation(event) {
       const { value } = event.target
       return Number(value) <= 12
+    },
+    changeHandler(event) {
+      this.$store.commit('setAdditionalAmount', event.target.checked ? 0.01 : 0)
     }
   }
 }
@@ -95,6 +100,34 @@ export default {
 
     &:hover {
       background: #373737;
+    }
+  }
+  &__checkbox {
+    font-size: 14px;
+    display: flex;
+    align-content: center;
+
+    input {
+      width: 22px;
+      height: 22px;
+      margin-right: 5px;
+      border: 1px solid rgba(0, 0, 0, 0.4);
+      appearance: none;
+      box-shadow: unset;
+      outline: none;
+      border-radius: 0.25em;
+      cursor: pointer;
+
+      &:checked {
+        background-color: unset;
+        border-color: unset;
+        box-shadow: unset;
+        outline: none;
+        background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path fill='none' stroke='%23e66000' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/></svg>");
+      }
+    }
+    span {
+      align-content: center;
     }
   }
 }

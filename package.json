@@ -12,7 +12,8 @@
   },
   "dependencies": {
     "vue": "^3.4.29",
-    "vue-the-mask": "^0.11.1"
+    "vue-the-mask": "^0.11.1",
+    "vuex": "^4.0.2"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.8.0",

@@ -1,6 +1,7 @@
 <template>
   <section class="sidebar">
     <LogoIcon></LogoIcon>
+    <SidebarInfo />
   </section>
 </template>
 
@@ -10,7 +11,8 @@ import { defineAsyncComponent } from 'vue'
 export default {
   name: 'Sidebar',
   components: {
-    LogoIcon: defineAsyncComponent(() => import('@/components/icons/Logo.vue'))
+    LogoIcon: defineAsyncComponent(() => import('@/components/icons/Logo.vue')),
+    SidebarInfo: defineAsyncComponent(() => import('@/components/SidebarInfo.vue'))
   }
 }
 </script>
