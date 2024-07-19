@@ -26,5 +26,6 @@ export default {
   background: #fff;
   display: flex;
   gap: 40px;
+  padding-right: 50px;
 }
 </style>
