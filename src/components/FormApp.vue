@@ -71,7 +71,7 @@ export default {
           validation: this.cvvValidationForm
         },
         policy: {
-          value: true,
+          value: false,
           validation: this.policyValidationForm
         }
       }
