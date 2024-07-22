@@ -1,5 +1,12 @@
 # platon_form
 
+## Task description
+
+Зверстать платіжну форму на vue.js. Приклад форми на jquery - devplaton.com.ua/RA/buy_platon.php
+
+Верстати можна тільки частину з методом оплати карти.
+Меню зліва з методами оплати верстаємо але не клікабельним
+
 This template should help get you started developing with Vue 3 in Vite.
 
 ## Recommended IDE Setup
