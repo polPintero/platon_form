@@ -27,5 +27,17 @@ export default {
   display: flex;
   gap: 40px;
   padding-right: 50px;
+
+  @media (max-width: 948px) {
+    flex-direction: column;
+    gap: 0;
+    padding: 20px;
+
+    &:deep() {
+      .sidebar {
+        width: 100%;
+      }
+    }
+  }
 }
 </style>
