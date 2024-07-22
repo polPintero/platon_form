@@ -24,9 +24,10 @@ export default {
     CloseIcon: defineAsyncComponent(() => import('@/components/icons/Close.vue')),
     InfoIcon: defineAsyncComponent(() => import('@/components/icons/Info.vue'))
   },
+  emits: ['update:modelValue'],
   props: {
     mask: {
-      type: String,
+      type: [String, Array],
       default: ''
     },
     placeholder: {
@@ -49,6 +50,11 @@ export default {
   computed: {
     isShowClose() {
       return this.clearable && this.value
+    }
+  },
+  watch: {
+    currentValue(e) {
+      this.$emit('update:modelValue', e)
     }
   },
   data() {
