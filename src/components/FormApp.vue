@@ -1,21 +1,30 @@
 <template>
-  <form class="form-app">
+  <form class="form-app" @submit.prevent="submitHandler">
     <InputApp
-      mask="XXXX XXXX XXXX XXXX"
+      v-model="form.cardNumber.value"
+      mask="#### #### #### ####"
       placeholder="XXXX XXXX XXXX XXXX"
-      :settings="card"
       clearable
       infoTxt="Enter the card number (16 digits)"
+      :validation="cardValidationEvent"
     />
     <div class="form-app__extra">
       <InputApp
+        v-model="form.month.value"
         mask="##"
         placeholder="MM"
-        :validation="monthValidation"
+        :validation="monthValidationEvent"
         infoTxt="Indicate the validity period of your card (month)"
       />
-      <InputApp mask="##" placeholder="YY" infoTxt="Enter the year" />
       <InputApp
+        v-model="form.year.value"
+        mask="##"
+        placeholder="YY"
+        infoTxt="Enter the year"
+        :validation="yearValidationEvent"
+      />
+      <InputApp
+        v-model="form.cvv.value"
         mask="###"
         placeholder="CVV2/CVC2"
         infoTxt="The last 3 digits on the back of your card"
@@ -23,14 +32,14 @@
     </div>
     <label class="form-app__checkbox">
       <span class="form-app__checkbox__input">
-        <input type="checkbox" @input="changeHandler" />
+        <input type="checkbox" @input="policyChangeHandler" v-model="form.policy.value" />
       </span>
       <span
         >Guarantee of fast return of funds
         <a href="https://platon.ua/policy.pdf" target="_blank">(public policy)</a>
       </span>
     </label>
-    <button class="form-app__submit" type="submit">PAY</button>
+    <button class="form-app__submit" type="submit" :disabled="!isValidForm">PAY</button>
   </form>
 </template>
 
@@ -44,18 +53,95 @@ export default {
   },
   data() {
     return {
-      card: {
-        defaultValue: 'XXXX XXXX XXXX XXXX'
+      form: {
+        cardNumber: {
+          value: '',
+          validation: this.cardValidationForm
+        },
+        month: {
+          value: '',
+          validation: this.monthValidationForm
+        },
+        year: {
+          value: '',
+          validation: this.yearValidationForm
+        },
+        cvv: {
+          value: '',
+          validation: this.cvvValidationForm
+        },
+        policy: {
+          value: true,
+          validation: this.policyValidationForm
+        }
       }
     }
   },
+  computed: {
+    isValidForm() {
+      return this.formValidation()
+    }
+  },
   methods: {
-    monthValidation(event) {
+    monthValidationEvent(event) {
       const { value } = event.target
       return Number(value) <= 12
     },
-    changeHandler(event) {
+    yearValidationEvent(event) {
+      const { value } = event.target
+      if (value.length <= 1) return true
+      const nowYear = new Date().getFullYear() - 2000
+      const num = Number(value)
+      return num >= nowYear && num <= nowYear + 20
+    },
+    cardValidationEvent(event) {
+      const { value } = event.target
+      const firstSymbol = parseFloat(value.split('')[0])
+      return [3, 4, 5, 6].includes(firstSymbol)
+    },
+    policyChangeHandler(event) {
       this.$store.commit('setAdditionalAmount', event.target.checked ? 0.01 : 0)
+    },
+    submitHandler() {
+      console.log(this.formValidation())
+      const { form } = this
+      const cardNumber = `card:${form.cardNumber.value}`
+      const month = `month:${form.month.value}`
+      const year = `year:${form.year.value}`
+      const cvv = `cvv:${form.cvv.value}`
+      const policy = `policy:${form.policy.value}`
+      alert(`
+      ${cardNumber}
+      ${month}
+      ${year}
+      ${cvv}
+      ${policy} 
+      `)
+    },
+    cardValidationForm(v) {
+      return v.split(' ').join('').length === 16
+    },
+    monthValidationForm(v) {
+      if (v.toString().length <= 1) return false
+      return this.monthValidationEvent({ target: { value: v } })
+    },
+    yearValidationForm(v) {
+      if (v.toString().length <= 1) return false
+      return this.yearValidationEvent({ target: { value: v } })
+    },
+    cvvValidationForm(v) {
+      return v.length === 3
+    },
+    policyValidationForm(v) {
+      return v
+    },
+    formValidation() {
+      const isValid = Object.keys(this.form).every((key) => {
+        const elem = this.form[key]
+        if (!elem.validation) return true
+        return elem.validation(elem.value)
+      })
+      return isValid
     }
   }
 }
@@ -97,6 +183,10 @@ export default {
     cursor: pointer;
     width: fit-content;
     align-self: center;
+
+    &[disabled] {
+      cursor: not-allowed;
+    }
 
     &:hover {
       background: #373737;
